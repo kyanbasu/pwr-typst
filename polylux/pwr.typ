@@ -3,33 +3,44 @@
 #let pwr-author = state("pwr-author", none)
 #let pwr-date = state("pwr-date", none)
 #let pwr-footer = state("pwr-footer", [])
+#let pwr-lang = state("pwr-lang", none)
 
 #let pwr-theme(
-  aspect-ratio: "4-3",
-  footer: [],
+  footer: [\u{0}],
   author: none,
   date: none,
+  lang: "pl",
   background: white,
   foreground: black,
   body
 ) = {
   set page(
-    paper: "presentation-" + aspect-ratio,
+    paper: "presentation-4-3",
     margin: 2em,
     header: none,
     footer: none,
     fill: background,
   )
   set text(fill: foreground, size: 25pt)
+  set text(lang: lang)
   show footnote.entry: set text(size: .6em)
   show heading.where(level: 2): set block(below: 2em)
   set outline(target: heading.where(level: 1), title: none, fill: none)
   show outline.entry: it => it.body
   show outline: it => block(inset: (x: 1em), it)
+  show heading: it => [
+    #set text(fill: gradient.linear(red, red.darken(50%)))
+    #block(it.body)
+  ]
+  //description above figure is polish thing
+  show figure.where(
+    kind: table
+  ): set figure.caption(position: top)
 
   pwr-footer.update(footer)
   pwr-author.update(author)
   pwr-date.update(date)
+  pwr-lang.update(lang)
 
   body
 }
@@ -65,7 +76,7 @@
   let deco-format(it) = text(size: .6em, fill: gray, it)
   set page(
     footer: deco-format({
-      pwr-footer.display(); h(1fr); logic.logical-slide.display()
+      h(5em); pwr-footer.display(); h(1fr); logic.logical-slide.display()
     }),
     footer-descent: 1em,
     header-ascent: 1em,
@@ -74,11 +85,11 @@
 }
 
 #let slide(body) = {
-  let body = pad(x: 3em, y: .1em, body)
+  let body = pad(x: 4em, y: .1em, body)
   let deco-format(it) = text(size: .6em, fill: gray, it)
   set page(
     footer: deco-format({
-      pwr-footer.display(); h(1fr); logic.logical-slide.display()
+      h(5em); pwr-footer.display(); h(1fr); logic.logical-slide.display()
     }),
     footer-descent: 1em,
     header-ascent: 1em,
