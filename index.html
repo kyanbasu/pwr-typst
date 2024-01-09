@@ -1,20 +1,29 @@
 <body>
   <a href="https://github.com/kyanbasu/pwr-typst"><h1>Excel to typst table converter</h1></a>
-  <textarea onchange="typsttextinput(this)" onclick="typsttextinput(this)" rows="15" cols="150" placeholder="Paste excel input here"></textarea>
+  <input onclick="typsttextinput()" type="checkbox" id="typstCompleteTable">
+  <label> Generate entire figure template, keep off to get body only</label><br>
+  <textarea onchange="typsttextinput()" onclick="typsttextinput()" id="exceltotypstdata" rows="15" cols="150" placeholder="Paste excel input here"></textarea>
   <textarea readonly id="typstoutput" rows="15" cols="150" placeholder="You'll get output here"></textarea>
   <script>
     function typsttextinput(data){
-        if (data.value.endsWith('\n')) {
-            data.value = data.value.slice(0, -1);
-        }
-        var firstNewLineIndex = data.value.indexOf('\n');
-        var subText = data.value.substring(0, firstNewLineIndex);
-        var tabCount = (subText.match(/\t/g) || []).length;
-        var out = ""
-        out += "columns: " + (tabCount + 1) + ",\n"
-
-        out += "[" + data.value.replaceAll(/\n/g, "],\n[").replaceAll(/\t/g, "], [") + "]"
-        document.getElementById('typstoutput').value = out
+      var check = document.getElementById('typstCompleteTable')
+      var data = document.getElementById('exceltotypstdata').value
+      if (data.endsWith('\n')) {
+          data = data.slice(0, -1);
+      }
+      var out = ""
+      if(check.checked){
+          var firstNewLineIndex = data.indexOf('\n');
+          var subText = data.substring(0, firstNewLineIndex);
+          var tabCount = (subText.match(/\t/g) || []).length;
+          out += "#figure(\ntable(\n"
+          out += "\tcolumns: " + (tabCount + 1) + ",\n"
+          out += "\t[" + data.replaceAll(/\n/g, "],\n[").replaceAll(/\t/g, "], [").replaceAll(/\n/g, "\n\t") + "]"
+          out += "\n), caption: [Enter your caption here...])"
+      } else {
+          out += "[" + data.replaceAll(/\n/g, "],\n[").replaceAll(/\t/g, "], [") + "]"
+      }
+      document.getElementById('typstoutput').value = out
     }
   </script>
 </body>
