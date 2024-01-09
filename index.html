@@ -1,3 +1,19 @@
 <body>
-  <p>test</p>
+  <textarea onchange="typsttextinput(this)" onclick="typsttextinput(this)" rows="20" cols="200"></textarea>
+  <textarea readonly id="typstoutput" rows="20" cols="200"></textarea>
+  <script>
+    function typsttextinput(data){
+        if (data.value.endsWith('\n')) {
+            data.value = data.value.slice(0, -1);
+        }
+        var firstNewLineIndex = data.value.indexOf('\n');
+        var subText = data.value.substring(0, firstNewLineIndex);
+        var tabCount = (subText.match(/\t/g) || []).length;
+        var out = ""
+        out += "columns: " + (tabCount + 1) + ",\n"
+
+        out += "[" + data.value.replaceAll(/\n/g, "],\n[").replaceAll(/\t/g, "], [") + "]"
+        document.getElementById('typstoutput').value = out
+    }
+  </script>
 </body>
