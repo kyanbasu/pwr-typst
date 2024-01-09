@@ -1,6 +1,6 @@
 <body>
-  <textarea onchange="typsttextinput(this)" onclick="typsttextinput(this)" rows="20" cols="200"></textarea>
-  <textarea readonly id="typstoutput" rows="20" cols="200"></textarea>
+  <textarea onchange="typsttextinput(this)" onclick="typsttextinput(this)" rows="15" cols="150" placeholder="Paste excel input here"></textarea>
+  <textarea readonly id="typstoutput" rows="15" cols="150" placeholder="You'll get output here"></textarea>
   <script>
     function typsttextinput(data){
         if (data.value.endsWith('\n')) {
