@@ -5,6 +5,9 @@
 #let pwr-footer = state("pwr-footer", [])
 #let pwr-lang = state("pwr-lang", none)
 
+#let title_bg = "images/image1_p2_pl.png"
+#let secondary_bg = "images/image2_p2_pl.png"
+
 #let pwr-theme(
   footer: [\u{0}],
   author: none,
@@ -47,7 +50,7 @@
 
 #let title-slide(title: "", subtitle: none) = {
   logic.polylux-slide({
-    place(dx:-7.5%, dy:-10%, image("images/image1_p2_pl.png", fit: "stretch", width: 120%, height: 120%))
+    place(dx:-7.5%, dy:-10%, image(title_bg, fit: "stretch", width: 120%, height: 120%))
     set text(fill: black)
     v(15%)
     align(
@@ -76,23 +79,23 @@
   let deco-format(it) = text(size: .6em, fill: gray, it)
   set page(
     footer: deco-format({
-      h(5em); pwr-footer.display(); h(1fr); logic.logical-slide.display()
+      place(bottom + left, dy: -20pt, dx: -30pt, logic.logical-slide.display()); place(bottom + center, dy: -20pt, pwr-footer.display());
     }),
     footer-descent: 1em,
     header-ascent: 1em,
   )
-  logic.polylux-slide({place(dx:-7.5%, dy:-10%, image("images/image1_p2_pl.png", fit: "stretch", width: 120%, height: 120%)); align(center + horizon, body)})
+  logic.polylux-slide({place(dx:-7.5%, dy:-10%, image(secondary_bg, fit: "stretch", width: 120%, height: 120%)); align(center + horizon, body)})
 }
 
 #let slide(body) = {
-  let body = pad(x: 4em, y: .1em, body)
+  let body = pad(x: 1em, y: .1em, body)
   let deco-format(it) = text(size: .6em, fill: gray, it)
   set page(
     footer: deco-format({
-      h(5em); pwr-footer.display(); h(1fr); logic.logical-slide.display()
+      place(bottom + left, dy: -20pt, dx: -30pt, logic.logical-slide.display()); place(bottom + center, dy: -20pt, pwr-footer.display());
     }),
     footer-descent: 1em,
     header-ascent: 1em,
   )
-  logic.polylux-slide({place(dx:-7.5%, dy:-10%, image("images/image1_p2_pl.png", fit: "stretch", width: 120%, height: 120%)); body})
+  logic.polylux-slide({place(dx:-7.5%, dy:-10%, image(secondary_bg, fit: "stretch", width: 120%, height: 120%)); body})
 }
