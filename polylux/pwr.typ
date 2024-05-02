@@ -1,4 +1,4 @@
-#import "@local/polylux:0.3.1": logic
+#import "@preview/polylux:0.3.1": logic
 
 #let pwr-author = state("pwr-author", none)
 #let pwr-date = state("pwr-date", none)
