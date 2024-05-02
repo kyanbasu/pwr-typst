@@ -2,14 +2,14 @@
 Typst [Polylux](https://github.com/andreasKroepelin/polylux "Polylux github") PWr template
 
 # Requirements
-polylux:0.3.1+
+polylux (tested working with version 0.3.1)
 
 
 # Usage
 
 Example 1.
 ```typst
-#import "@local/polylux:0.3.1": * //set to @preview if you haven't downloaded it locally
+#import "@preview/polylux:0.3.1": *
 #import "pwr.typ": *
 
 #let today = datetime.today()
@@ -24,3 +24,7 @@ Example 1.
   Prezentacja przedstawia analize pomiarów biometrycznych 706 badanych oraz ich wyników w różnych dyscyplinach.
 ]
 ```
+Preview:
+
+![image1](example1_1.png)
+![image1](example1_2.png)
