@@ -1,17 +1,3 @@
-<!--
-TODO
-Correct merged cells pasting:
-
-when you paste merged cells you get something like
-test	1	1
-	2	2
-	3	3
-1	2	3
-where you have empty cells, so script could use table.cell to merge them with previous cell.
-problem is if to fill vertically (from top cell) or horizontally (from left), tho it could be user selectable,
-you couldn't mix both types that way in one table with script
--->
-
 <body>
   <a href="https://github.com/kyanbasu/pwr-typst"><h1>Excel to typst table converter</h1></a>
   <input onclick="typsttextinput()" type="checkbox" id="typstCompleteTable">
