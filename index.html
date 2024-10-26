@@ -1,32 +1,108 @@
+<!DOCTYPE html>
 <body>
-  <a href="https://github.com/kyanbasu/pwr-typst"><h1>Excel to typst table converter</h1></a>
-  <input onclick="typsttextinput()" type="checkbox" id="typstCompleteTable">
-  <label> Generate entire figure template, keep off to get body only</label><br>
-  <textarea onchange="typsttextinput()" onclick="typsttextinput()" id="exceltotypstdata" rows="15" cols="150" placeholder="Paste excel input here"></textarea>
-  <textarea readonly id="typstoutput" rows="15" cols="150" placeholder="You'll get output here"></textarea>
-  <script>
-    function typsttextinput(data){
+    <a href="https://github.com/kyanbasu/pwr-typst"><h1>Excel to typst table converter</h1></a>
+    <p>Copy table from Excel, paste it into input field and you get typst table, easy as that</p>
+    <input onclick="typsttextinput()" type="checkbox" id="typstCompleteTable">
+    <label> Generate entire figure template, keep off to get body only</label><br>
+    <p>Merging cells mode:</p>
+    <input onclick="typsttextinput('none')" type="checkbox" id="noneMergingCheck" checked>
+    <label> None</label><br>
+    <input onclick="typsttextinput('vertical')" type="checkbox" id="verticalMergingCheck">
+    <label> Vertical</label><br>
+    <input onclick="typsttextinput('horizontal')" type="checkbox" id="horizontalMergingCheck" disabled>
+    <label> Horizontal (TODO)</label><br>
+    <p>Input:</p>
+    <textarea onchange="typsttextinput()" onclick="typsttextinput()" id="exceltotypstdata" rows="15" cols="150" placeholder="Paste excel input here"></textarea>
+    <p>Output:</p>
+    <textarea readonly id="typstoutput" rows="15" cols="150" placeholder="You'll get output here"></textarea>
+    <script>
       var check = document.getElementById('typstCompleteTable')
-      var data = document.getElementById('exceltotypstdata').value
-      if (data.endsWith('\n')) {
-          data = data.slice(0, -1);
+      var noneMergingCheck = document.getElementById('noneMergingCheck')
+      var verticalMergingCheck = document.getElementById('verticalMergingCheck')
+      var horizontalMergingCheck = document.getElementById('horizontalMergingCheck')
+      function typsttextinput(mergingMode){
+
+        document.getElementById('noneMergingCheck').checked = false
+        document.getElementById('verticalMergingCheck').checked = false
+        document.getElementById('horizontalMergingCheck').checked = false
+        
+        switch (mergingMode) {
+            case "vertical":
+                document.getElementById('verticalMergingCheck').checked = true
+                break;
+            
+            case "horizontal":
+                document.getElementById('horizontalMergingCheck').checked = true
+                break;
+        
+            default:
+                document.getElementById('noneMergingCheck').checked = true
+                break;
+        }
+
+
+        var data = document.getElementById('exceltotypstdata').value
+        var filltype = mergingMode;
+        if (data.endsWith('\n')) {
+            data = data.slice(0, -1);
+        }
+
+        let matrix = data.split(/\n/g)
+        let out_rows = Array(matrix.length).fill("")
+
+        for (let row = 0; row < matrix.length; row++) {
+            matrix[row] = matrix[row].split(/\t/g)
+        }
+
+        switch (filltype) {
+            case "vertical":
+                let rowspan;
+                for (let row = 0; row < matrix.length; row++) {
+                    for (let col = 0; col < matrix[row].length; col++) {
+                        if(matrix[row][col] == ''){
+                            out_rows[row] += '\t'
+                            continue;
+                        }
+
+                        rowspan = 1;
+                        let _row = row
+                        while (matrix?.[_row+1]?.[col]?.trim() == ''){
+                            rowspan += 1;
+                            _row+=1;
+                        }
+
+                        if(rowspan > 1){
+                            matrix[row][col] = `table.cell(rowspan: ${rowspan}, [${matrix[row][col]}])`
+                            out_rows[row] += `${matrix[row][col]}, `
+                        } else {
+                            out_rows[row] += `[${matrix[row][col]}], `
+                        }
+                    }
+                }
+                break;
+        
+            default:
+                for (let row = 0; row < matrix.length; row++) {
+                    for (let col = 0; col < matrix[row].length; col++) {
+                       out_rows[row] += `[${matrix[row][col]}], `
+                    }
+                }
+                break;
+        }
+
+        if(check.checked){
+            document.getElementById('typstoutput').value = 
+                `#figure(\ntable(\n\tcolumns: ${matrix[0].length},\n`+
+                `\t${out_rows.join('\n\t')}\n`+
+                `), caption: [Enter your caption here...])`
+
+        } else {
+            document.getElementById('typstoutput').value = out_rows.join('\n')
+        }
       }
-      var out = ""
-      if(check.checked){
-          var firstNewLineIndex = data.indexOf('\n');
-          var subText = data.substring(0, firstNewLineIndex);
-          var tabCount = (subText.match(/\t/g) || []).length;
-          out += "#figure(\ntable(\n"
-          out += "\tcolumns: " + (tabCount + 1) + ",\n"
-          out += "\t[" + data.replaceAll(/\n/g, "],\n[").replaceAll(/\t/g, "], [").replaceAll(/\n/g, "\n\t") + "]"
-          out += "\n), caption: [Enter your caption here...])"
-      } else {
-          out += "[" + data.replaceAll(/\n/g, "],\n[").replaceAll(/\t/g, "], [") + "]"
+      document.getElementById('typstoutput').ondblclick = function(){
+          document.getElementById('typstoutput').select();
       }
-      document.getElementById('typstoutput').value = out
-    }
-    document.getElementById('typstoutput').ondblclick = function(){
-        document.getElementById('typstoutput').select();
-    }
-  </script>
-</body>
+    </script>
+  </body>
+  
