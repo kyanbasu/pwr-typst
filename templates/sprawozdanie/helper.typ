@@ -1,6 +1,7 @@
-// Typst 0.14.0
+// Typst 0.14.2
+
 // Plik z przydatnymi funkcjami i konfiguracjami
-#let ustawienia(doc) = {
+#let zastosujUstawienia(doc) = {
   set text(lang: "pl", font: "Exo 2")
   set page("a4")
   
@@ -44,12 +45,17 @@
   // wylaczenie justyfikacji w tabelach
   show table: set par(justify: false)
   
+  // inline codeblock background
+  show raw.where(block: false): it => {
+    highlight(fill: luma(220), top-edge: 0.9em, radius: 4pt, it)
+  }
+
   doc
 }
 
 #let cent(body) = [#align(center, body)]
 
-#let naglowekPoczatkowy(nazwa_kursu, temat, nr, autorzy, data, grupa) = [
+#let stronaTytulowaLaboratorium(nazwa_kursu: [], temat: [], nr: [], autorzy: [], data: datetime.today(), grupa: []) = [
   #set par(justify: false)
   #grid(
     columns: (1fr, 1fr),
@@ -60,16 +66,25 @@
     grid.cell(rowspan: 2, cent[
       #text(size: 12pt, [*Nazwisko imię*])\
       #text(size: 20pt, [*
-      #{
-        for autor in autorzy {
-          autor + linebreak()
-        }
-      }
+      #autorzy
       *])
     ]),
     cent[#text(size: 18pt, [Grupa: *#grupa*])],
-    cent[#text(size: 18pt, [Data: *#data*])],
+    cent[#text(size: 18pt, [Data: *#{data.display("[day].[month].[year]")}*])],
     grid.cell(colspan: 2, text(size: 18pt, [*Temat: #temat*]))
   )
   #set par(justify: true)
 ]
+
+#let stronaTytulowaProjekt(tytul: [], nazwa_kursu: [], autorzy: [], grupa: [], data: datetime.today()) = {
+  v(60pt)
+  line(length: 100%)
+  cent[#text(size: 26pt, fill: red.darken(40%), [*#tytul*])]
+  
+  v(60pt)
+  cent(text(size: 20pt, autorzy))
+  line(length: 100%)
+  cent(text(size: 14pt, 
+    [ #nazwa_kursu #{if grupa != [] [#grupa]}\ #data.display("[day].[month].[year]")]
+  ))
+}
