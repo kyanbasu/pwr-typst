@@ -53,8 +53,18 @@
   doc
 }
 
+//////// Dodatkowe funkcje ////////
+
 #let cent(body) = [#align(center, body)]
 
+// figure ale z opisem dla kodu
+#let code(body, caption: none) = {
+  figure(
+  body, kind: "code", caption: caption)
+}
+
+
+//////// Strony tytulowe ////////
 #let stronaTytulowaLaboratorium(nazwa_kursu: [], temat: [], nr: [], autorzy: [], data: datetime.today(), grupa: []) = [
   #set par(justify: false)
   #grid(
