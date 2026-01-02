@@ -66,6 +66,16 @@
 
 //////// Strony tytulowe ////////
 #let stronaTytulowaLaboratorium(nazwa_kursu: [], temat: [], nr: [], autorzy: [], data: datetime.today(), grupa: []) = [
+  #cent[
+    #grid(
+      columns: 2,
+      column-gutter: 40pt,
+      image("logo_pwr.png", height: 18%),
+      [#image("logo_wit.png", height: 12.3%)
+        #move(dy: -1pt, text(size: 14pt, [Wydział Informatyki\ i Telekomunikacji]))],
+    )
+  ]
+
   #set par(justify: false)
   #grid(
     columns: (1fr, 1fr),
@@ -87,6 +97,16 @@
 ]
 
 #let stronaTytulowaProjekt(tytul: [], nazwa_kursu: [], autorzy: [], grupa: [], data: datetime.today()) = {
+  cent[
+    #grid(
+      columns: 2,
+      column-gutter: 40pt,
+      image("logo_pwr.png", height: 18%),
+      [#image("logo_wit.png", height: 12.3%)
+        #move(dy: -1pt, text(size: 14pt, [Wydział Informatyki\ i Telekomunikacji]))],
+    )
+  ]
+
   v(60pt)
   line(length: 100%)
   cent[#text(size: 26pt, fill: red.darken(40%), [*#tytul*])]
